@@ -1,23 +1,22 @@
 {
-  "name": "myapp",
+  "name": "devops-nodejs-app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "npm install inherits && mocha"
+    "test": "npm i --save-dev supertest should mocha" && mocha"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "*",
-    "http-errors": "*",
-    "mysql": "*"
+    "express": "^4.17.1"
   },
   "devDependencies": {
-    "inherits": "*",
-    "mocha": "*",
-    "ms": "*"
+    "mocha": "^9.1.0",
+    "should": "^13.2.3",
+    "supertest": "^6.1.6"
   }
 }
+
