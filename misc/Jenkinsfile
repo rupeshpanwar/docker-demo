@@ -1,22 +1,69 @@
-node {
-     def app 
-     stage('clone repository') {
-      checkout scm  
+   pipeline { 
+
+    environment { 
+
+        registry = "rupeshpanwar/demo-docker-jenkins" 
+
+        registryCredential = 'dockerhub' 
+
+        dockerImage = '' 
+
     }
-     stage('Initialize'){
-        def dockerHome = tool 'docker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-	env.IMAGEREPO="rupeshpanwar/demo-docker-demo1"
+
+    agent any 
+
+    stages { 
+
+        stage('Cloning our Git') { 
+
+            steps { 
+
+                git 'https://github.com/rupeshpanwar/docker-demo.git' 
+
+            }
+
+        } 
+
+        stage('Building our image') { 
+
+            steps { 
+
+                script { 
+
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+
+                }
+
+            } 
+
+        }
+
+        stage('Deploy our image') { 
+
+            steps { 
+
+                script { 
+
+                    docker.withRegistry( '', registryCredential ) { 
+
+                        dockerImage.push() 
+
+                    }
+
+                } 
+
+            }
+
+        } 
+
+        stage('Cleaning up') { 
+
+            steps { 
+
+                sh "docker rmi $registry:$BUILD_NUMBER" 
+
+            }
+
+        } 
+
     }
-     stage('Build docker Image'){
-      app = docker.build IMAGEREPO
-    }
-     stage('Push Image'){
-       // This step should not normally be used in your script. Consult the inline help for details.
-         docker.withDockerRegistry(url: 'https://docker.io/library/rupeshpanwar/',credentialsId: 'dockerhub') {
-         // some block       
-             app.push("${env.BUILD_NUMBER}")            
-             app.push("latest")   
-   }
-   }  
-}
