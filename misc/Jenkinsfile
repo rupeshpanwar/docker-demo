@@ -6,13 +6,14 @@ node {
      stage('Initialize'){
         def dockerHome = tool 'docker'
         env.PATH = "${dockerHome}/bin:${env.PATH}"
+	   env.IMAGEREPO="rupeshpanwar/dockerdemo-test1"
     }
      stage('Build docker Image'){
-      app = docker.build("rupeshpanwar/dockerdemo-test1")
+      app = docker.build IMAGEREPO
     }
      stage('Push Image'){
        // This step should not normally be used in your script. Consult the inline help for details.
-         docker.withDockerRegistry(credentialsId: 'dockerhub', url: 'https://registry.hub.docker.com') {
+         docker.withDockerRegistry(url: 'https://registry.hub.docker.com',credentialsId: 'dockerhub') {
          // some block       
              app.push("${env.BUILD_NUMBER}")            
              app.push("latest")   
