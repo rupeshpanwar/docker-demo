@@ -11,9 +11,11 @@ node {
       app = docker.build("rupeshpanwar/dockerdemo-test1")
     }
      stage('Push Image'){
-       docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {            
-       app.push("${env.BUILD_NUMBER}")            
-       app.push("latest")   
+       // This step should not normally be used in your script. Consult the inline help for details.
+         docker.withDockerRegistry(credentialsId: 'dockerhub', url: 'https://registry.hub.docker.com') {
+         // some block       
+             app.push("${env.BUILD_NUMBER}")            
+             app.push("latest")   
    }
    }  
 }
