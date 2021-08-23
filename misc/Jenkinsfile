@@ -1,8 +1,10 @@
-   pipeline { 
-    tools {docker "docker"}
+        def dockerHome = tool 'docker'   
+pipeline { 
+      
+    //tools {docker "docker"}
     environment { 
-       // def dockerHome = tool 'docker'
-       // env.PATH = "${dockerHome}/bin:${env.PATH}"
+
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
         registry = "rupeshpanwar/demo-docker-jenkins" 
         registryCredential = 'dockerhub' 
         dockerImage = '' 
